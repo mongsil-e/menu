@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘 뭐 먹지? - 메뉴 추천</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- 배경 효과 -->
+        <div class="bg-blur"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1">🍕</div>
+            <div class="shape shape-2">🍜</div>
+            <div class="shape shape-3">🍣</div>
+            <div class="shape shape-4">🍔</div>
+            <div class="shape shape-5">🍝</div>
+            <div class="shape shape-6">🍱</div>
+        </div>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <!-- 추천 히스토리 (왼쪽 사이드바) -->
+            <section class="history-section">
+                <h2 class="history-title">📜 이전 추천 기록</h2>
+                <div class="history-list" id="historyList">
+                    <p class="history-empty">아직 추천받은 메뉴가 없습니다.</p>
+                </div>
+            </section>
+
+            <!-- 메인 컨텐츠 래퍼 (오른쪽) -->
+            <div class="content-wrapper">
+                <header class="header">
+                    <h1 class="title">
+                        <span class="emoji">🍽️</span>
+                        오늘 뭐 먹지?
+                    </h1>
+                    <p class="subtitle">버튼을 눌러 오늘의 메뉴를 추천받아 보세요!</p>
+                </header>
+
+                <!-- 슬롯 머신 영역 -->
+                <div class="slot-machine">
+                    <div class="slot-container">
+                        <div class="slot" id="slot1">
+                            <div class="slot-window">
+                                <div class="slot-reel" id="reel1">
+                                    <div class="slot-item">?</div>
+                                </div>
+                            </div>
+                            <div class="slot-label">첫 번째</div>
+                        </div>
+                        <div class="slot" id="slot2">
+                            <div class="slot-window">
+                                <div class="slot-reel" id="reel2">
+                                    <div class="slot-item">?</div>
+                                </div>
+                            </div>
+                            <div class="slot-label">두 번째</div>
+                        </div>
+                        <div class="slot" id="slot3">
+                            <div class="slot-window">
+                                <div class="slot-reel" id="reel3">
+                                    <div class="slot-item">?</div>
+                                </div>
+                            </div>
+                            <div class="slot-label">세 번째</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 버튼 영역 -->
+                <div class="button-container">
+                    <button class="spin-button" id="spinBtn">
+                        <span class="button-text">🎰 메뉴 추천받기!</span>
+                        <span class="button-glow"></span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- 푸터 -->
+        <footer class="footer">
+            <p>총 <span id="menuCount">0</span>개의 메뉴 중에서 추천합니다 ✨</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
