@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오늘 뭐 먹지? - 메뉴 추천</title>
+    <title>엉오뭐먹? - 메뉴 추천</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
         rel="stylesheet">
@@ -38,9 +38,9 @@
                 <header class="header">
                     <h1 class="title">
                         <span class="emoji">🍽️</span>
-                        오늘 뭐 먹지?
+                        엉망진창 오늘 뭐 먹지?
                     </h1>
-                    <p class="subtitle">버튼을 눌러 오늘의 메뉴를 추천받아 보세요!</p>
+                    <p class="subtitle">나오면 일단 드셔야합니다</p>
                 </header>
 
                 <!-- 슬롯 머신 영역 -->
@@ -76,16 +76,52 @@
                 <!-- 버튼 영역 -->
                 <div class="button-container">
                     <button class="spin-button" id="spinBtn">
-                        <span class="button-text">🎰 메뉴 추천받기!</span>
+                        <span class="button-text">🎰</span>
                         <span class="button-glow"></span>
                     </button>
+                </div>
+
+                <!-- 확률 정보 영역 -->
+                <div class="probability-info">
+                    <h3 class="prob-title">중복 메뉴 등장확률:0.00701%<br><br>🤔 0.00701%의 확률은 어느 정도일까?</h3>
+                    <ul class="prob-list">
+                        <li>
+                            <span class="prob-icon">🍚</span>
+                            <div class="prob-text">
+                                <strong>햇반 네 공기 중 쌀알 하나</strong><br>
+                                눈을 감고 햇반 네 공기에서 쌀알을 딱 하나 집어 올렸는데, "내가 미리 표시해둔 바로 그 쌀알"일 확률 (햇반 1개, 210g 기준)
+                            </div>
+                        </li>
+                        <li>
+                            <span class="prob-icon">📅</span>
+                            <div class="prob-text">
+                                <strong>약 39년중 딱 하루 특별한 날</strong><br>
+                                매일매일 반복되는 일상으로 치면, <strong>39년(14079일)</strong>에 딱 한 번 일어날까 말까 한
+                                사건입니다.
+                            </div>
+                        </li>
+                        <li>
+                            <span class="prob-icon">🪙</span>
+                            <div class="prob-text">
+                                <strong>동전 던지기 연속 14번 같은 면!!</strong><br>
+                                동전을 던져서 14번 연속으로 같은 면만 나올 확률 (약 0.0061%)
+                            </div>
+                        </li>
+                        <li>
+                            <span class="prob-icon">⚡</span>
+                            <div class="prob-text">
+                                <strong>일생 동안 번개에 맞을 확률</strong><br>
+                                평생 살아가면서 번개에 한 번이라도 맞을 확률과 비슷 (약 15,300분의 1 = 0.0065%)
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </main>
 
         <!-- 푸터 -->
         <footer class="footer">
-            <p>총 <span id="menuCount">0</span>개의 메뉴 중에서 추천합니다 ✨</p>
+            <p>총 <span id="menuCount">0</span>개의 메뉴 중에서 추천합니다 ✨<br>데이터 출처: 공공데이터 다국어 메뉴 번역중 KOREAN, 나무위키 한식 메뉴</p>
         </footer>
     </div>
 
