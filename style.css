@@ -736,8 +736,31 @@ body {
         align-items: center;
     }
 
+    /* 모바일: slot-window 오른쪽에 즐겨찾기 버튼 배치 */
+    .slot {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .slot .favorite-button {
+        order: 0;
+        align-self: center;
+    }
+
+    .slot .slot-window {
+        order: 0;
+    }
+
+    .slot .slot-label {
+        flex-basis: 100%;
+        text-align: center;
+        order: 1;
+    }
+
     .slot-window {
-        width: 320px;
+        width: 280px;
         height: 104px;
     }
 
