@@ -105,7 +105,11 @@ function handleHistoryFavoriteClick(event) {
 // 메뉴 데이터 로드
 async function loadMenuData() {
     try {
-        const response = await fetch('menu_data.json');
+        // 캐시 방지: 매번 새로운 요청으로 인식하게 함
+        const response = await fetch(`menu_data.json?v=${new Date().getTime()}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         menuData = data.메뉴 || data.menu || [];
         menuCountEl.textContent = menuData.length.toLocaleString();
@@ -118,13 +122,21 @@ async function loadMenuData() {
             script.src = 'menu_data.js';
             document.head.appendChild(script);
             script.onload = () => {
-                if (typeof menuList !== 'undefined') {
+                if (typeof MENU_DATA_SOURCE !== 'undefined') {
+                    menuData = MENU_DATA_SOURCE.메뉴 || MENU_DATA_SOURCE.menu || [];
+                    menuCountEl.textContent = menuData.length.toLocaleString();
+                    console.log(`백업 데이터에서 ${menuData.length}개의 메뉴를 로드했습니다.`);
+                } else if (typeof menuList !== 'undefined') {
                     menuData = menuList;
                     menuCountEl.textContent = menuData.length.toLocaleString();
                 }
             };
         } catch (e) {
             console.error('menu_data.js 로드도 실패:', e);
+            // 데이터 로드 완전 실패 시 사용자 알림
+            if (menuData.length === 0) {
+                 alert('메뉴 데이터를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.');
+            }
         }
     }
 }
