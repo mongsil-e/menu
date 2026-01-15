@@ -29,6 +29,15 @@
         <main class="main-content">
             <!-- 추천 히스토리 (왼쪽 사이드바) -->
             <section class="history-section">
+                <div class="favorites-section">
+                    <div class="favorites-header">
+                        <h2 class="favorites-title">⭐ 즐겨찾기</h2>
+                        <span class="favorites-count" id="favoritesCount">0</span>
+                    </div>
+                    <div class="favorites-list" id="favoritesList">
+                        <p class="favorites-empty">즐겨찾기한 메뉴가 없습니다.</p>
+                    </div>
+                </div>
                 <h2 class="history-title">📜 이전 추천 기록</h2>
                 <div class="history-list" id="historyList">
                     <p class="history-empty">아직 추천받은 메뉴가 없습니다.</p>
@@ -50,27 +59,36 @@
                 <div class="slot-machine">
                     <div class="slot-container">
                         <div class="slot" id="slot1">
-                            <div class="slot-window">
+                        <div class="slot-window">
                                 <div class="slot-reel" id="reel1">
-                                    <div class="slot-item">?</div>
+                                    <div class="slot-item"><span class="slot-item-text">?</span></div>
                                 </div>
                             </div>
+                        <button class="favorite-button" type="button" data-slot="0" aria-label="첫 번째 결과 즐겨찾기">
+                            <span class="favorite-icon">☆</span>
+                        </button>
                             <div class="slot-label">첫 번째</div>
                         </div>
                         <div class="slot" id="slot2">
-                            <div class="slot-window">
+                        <div class="slot-window">
                                 <div class="slot-reel" id="reel2">
-                                    <div class="slot-item">?</div>
+                                    <div class="slot-item"><span class="slot-item-text">?</span></div>
                                 </div>
                             </div>
+                        <button class="favorite-button" type="button" data-slot="1" aria-label="두 번째 결과 즐겨찾기">
+                            <span class="favorite-icon">☆</span>
+                        </button>
                             <div class="slot-label">두 번째</div>
                         </div>
                         <div class="slot" id="slot3">
-                            <div class="slot-window">
+                        <div class="slot-window">
                                 <div class="slot-reel" id="reel3">
-                                    <div class="slot-item">?</div>
+                                    <div class="slot-item"><span class="slot-item-text">?</span></div>
                                 </div>
                             </div>
+                        <button class="favorite-button" type="button" data-slot="2" aria-label="세 번째 결과 즐겨찾기">
+                            <span class="favorite-icon">☆</span>
+                        </button>
                             <div class="slot-label">세 번째</div>
                         </div>
                     </div>
@@ -86,38 +104,47 @@
 
                 <!-- 확률 정보 영역 -->
                 <div class="probability-info">
-                    <h3 class="prob-title">중복 메뉴 등장확률:0.00701%<br><br>🤔 0.00701%의 확률은 어느 정도일까?</h3>
-                    <ul class="prob-list">
-                        <li>
-                            <span class="prob-icon">🍚</span>
-                            <div class="prob-text">
-                                <strong>햇반 네 공기 중 쌀알 하나</strong>
-                                <br>눈을 감고 햇반 네 공기에서 쌀알을 딱 하나 집어 올렸는데, "내가 미리 표시해둔 바로 그 쌀알"일 확률 (햇반 1개, 210g 기준)
-                            </div>
-                        </li>
-                        <li>
-                            <span class="prob-icon">📅</span>
-                            <div class="prob-text">
-                                <strong>약 39년중 딱 하루 특별한 날</strong>
-                                <br>매일매일 반복되는 일상으로 치면, <strong>39년(14079일)</strong>에 딱 한 번 일어날까 말까 한
-                                사건입니다.
-                            </div>
-                        </li>
-                        <li>
-                            <span class="prob-icon">🪙</span>
-                            <div class="prob-text">
-                                <strong>동전 던지기 연속 14번 같은 면!!</strong>
-                                <br>동전을 던져서 14번 연속으로 같은 면만 나올 확률 (약 0.0061%)
-                            </div>
-                        </li>
-                        <li>
-                            <span class="prob-icon">⚡</span>
-                            <div class="prob-text">
-                                <strong>일생 동안 번개에 맞을 확률</strong>
-                                <br>평생 살아가면서 번개에 한 번이라도 맞을 확률과 비슷 (약 15,300분의 1 = 0.0065%)
-                            </div>
-                        </li>
-                    </ul>
+                    <div class="prob-header">
+                        <h3 class="prob-title">중복 메뉴 등장확률:0.00701%</h3>
+                        <button class="prob-toggle" id="probToggle" type="button" aria-expanded="false"
+                            aria-controls="probDetails" aria-label="확률 설명 보기">
+                            ?
+                        </button>
+                    </div>
+                    <div class="prob-details" id="probDetails" hidden>
+                        <p class="prob-subtitle">🤔 0.00701%의 확률은 어느 정도일까?</p>
+                        <ul class="prob-list">
+                            <li>
+                                <span class="prob-icon">🍚</span>
+                                <div class="prob-text">
+                                    <strong>햇반 네 공기 중 쌀알 하나</strong>
+                                    <br>눈을 감고 햇반 네 공기에서 쌀알을 딱 하나 집어 올렸는데, "내가 미리 표시해둔 바로 그 쌀알"일 확률 (햇반 1개, 210g 기준)
+                                </div>
+                            </li>
+                            <li>
+                                <span class="prob-icon">📅</span>
+                                <div class="prob-text">
+                                    <strong>약 39년중 딱 하루 특별한 날</strong>
+                                    <br>매일매일 반복되는 일상으로 치면, <strong>39년(14079일)</strong>에 딱 한 번 일어날까 말까 한
+                                    사건입니다.
+                                </div>
+                            </li>
+                            <li>
+                                <span class="prob-icon">🪙</span>
+                                <div class="prob-text">
+                                    <strong>동전 던지기 연속 14번 같은 면!!</strong>
+                                    <br>동전을 던져서 14번 연속으로 같은 면만 나올 확률 (약 0.0061%)
+                                </div>
+                            </li>
+                            <li>
+                                <span class="prob-icon">⚡</span>
+                                <div class="prob-text">
+                                    <strong>일생 동안 번개에 맞을 확률</strong>
+                                    <br>평생 살아가면서 번개에 한 번이라도 맞을 확률과 비슷 (약 15,300분의 1 = 0.0065%)
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </main>

@@ -128,7 +128,7 @@ body {
     align-items: flex-start;
     /* 상단 정렬 */
     justify-content: center;
-    gap: 3rem;
+    gap: 2.5rem;
     /* 사이드바와 메인 컨텐츠 사이 간격 */
     padding: 2rem;
     position: relative;
@@ -151,7 +151,7 @@ body {
 /* ===== 헤더 ===== */
 .header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .title {
@@ -206,9 +206,36 @@ body {
     gap: 1rem;
 }
 
+.favorite-button {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-secondary);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.favorite-button:hover {
+    color: var(--text-primary);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.favorite-button.active {
+    color: #ffd166;
+    border-color: rgba(255, 209, 102, 0.6);
+    box-shadow: 0 0 12px rgba(255, 209, 102, 0.35);
+}
+
 .slot-window {
-    width: 200px;
-    height: 80px;
+    width: 260px;
+    height: 96px;
     background: rgba(30, 30, 50, 0.9);
     border: 2px solid var(--border-glow);
     border-radius: 16px;
@@ -245,18 +272,27 @@ body {
 }
 
 .slot-item {
-    height: 80px;
+    height: 96px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    padding: 0 0.5rem;
     text-align: center;
     color: var(--text-primary);
-    word-break: keep-all;
-    line-height: 1.2;
+    line-height: 1.35;
+    padding: 0 0.5rem;
+}
+
+.slot-item-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     overflow: hidden;
+    width: 100%;
+    word-break: break-word;
+    text-align: center;
 }
 
 .slot-item.final {
@@ -372,6 +408,86 @@ body {
     flex-direction: column;
 }
 
+.favorites-section {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+}
+
+.favorites-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.favorites-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.favorites-count {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.favorites-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.favorites-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.favorites-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.favorites-list::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+.favorite-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0.8rem;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+}
+
+.favorite-name {
+    font-size: 0.95rem;
+}
+
+.favorite-remove {
+    background: transparent;
+    border: none;
+    color: #ffd166;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.favorites-empty {
+    color: var(--text-secondary);
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+}
+
 .history-title {
     font-size: 1.3rem;
     font-weight: 700;
@@ -420,7 +536,7 @@ body {
 
 .history-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
     padding: 1rem 1.5rem;
     background: rgba(255, 255, 255, 0.03);
@@ -428,6 +544,7 @@ body {
     border-radius: 12px;
     transition: all 0.3s ease;
     animation: slideIn 0.3s ease-out;
+    flex-wrap: wrap;
 }
 
 @keyframes slideIn {
@@ -516,6 +633,7 @@ body {
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
+    min-width: 0;
 }
 
 .history-menu-tag {
@@ -526,6 +644,27 @@ body {
     font-size: 0.9rem;
     color: var(--accent);
     transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.history-menu-name {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.history-favorite-button {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.history-favorite-button.active {
+    color: #ffd166;
 }
 
 /* 중복 메뉴 하이라이트 */
@@ -553,6 +692,8 @@ body {
     font-size: 0.8rem;
     color: var(--text-secondary);
     flex-shrink: 0;
+    margin-left: auto;
+    white-space: nowrap;
 }
 
 /* ===== 푸터 ===== */
@@ -596,7 +737,8 @@ body {
     }
 
     .slot-window {
-        width: 280px;
+        width: 320px;
+        height: 104px;
     }
 
     .history-section {
@@ -613,6 +755,10 @@ body {
     .history-time {
         align-self: flex-end;
     }
+
+    .favorites-section {
+        margin-bottom: 1.25rem;
+    }
 }
 
 /* ===== 확률 정보 섹션 ===== */
@@ -626,12 +772,44 @@ body {
     backdrop-filter: blur(5px);
 }
 
+.prob-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
 .prob-title {
     font-size: 1.1rem;
     color: var(--accent);
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
     text-align: center;
     font-weight: 700;
+}
+
+.prob-toggle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.prob-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.prob-subtitle {
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
 }
 
 .prob-list {

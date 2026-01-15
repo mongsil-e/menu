@@ -3,11 +3,18 @@ let menuData = [];
 let isSpinning = false;
 let history = [];
 let historyCounter = 0;
+let favorites = new Set();
+let lastSelectedMenus = [];
 
 // DOM 요소
 const spinBtn = document.getElementById('spinBtn');
 const historyList = document.getElementById('historyList');
 const menuCountEl = document.getElementById('menuCount');
+const probToggleBtn = document.getElementById('probToggle');
+const probDetails = document.getElementById('probDetails');
+const favoritesList = document.getElementById('favoritesList');
+const favoritesCount = document.getElementById('favoritesCount');
+const slotFavoriteButtons = document.querySelectorAll('.favorite-button[data-slot]');
 const reels = [
     document.getElementById('reel1'),
     document.getElementById('reel2'),
@@ -18,8 +25,82 @@ const reels = [
 document.addEventListener('DOMContentLoaded', async () => {
     await loadMenuData();
     spinBtn.addEventListener('click', spin);
+    if (probToggleBtn && probDetails) {
+        probToggleBtn.addEventListener('click', toggleProbabilityDetails);
+    }
+    slotFavoriteButtons.forEach((button) => {
+        button.addEventListener('click', handleSlotFavoriteClick);
+    });
+    historyList.addEventListener('click', handleHistoryFavoriteClick);
     loadHistory();
+    loadFavorites();
 });
+
+function toggleProbabilityDetails() {
+    const isExpanded = probToggleBtn.getAttribute('aria-expanded') === 'true';
+    const nextState = !isExpanded;
+
+    probToggleBtn.setAttribute('aria-expanded', String(nextState));
+    probDetails.hidden = !nextState;
+}
+
+function loadFavorites() {
+    const saved = localStorage.getItem('favoriteMenus');
+    if (!saved) {
+        renderFavorites();
+        return;
+    }
+
+    try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+            favorites = new Set(parsed);
+        }
+    } catch (error) {
+        console.error('즐겨찾기 로드 실패:', error);
+    }
+
+    renderFavorites();
+}
+
+function saveFavorites() {
+    localStorage.setItem('favoriteMenus', JSON.stringify([...favorites]));
+}
+
+function toggleFavorite(menuName) {
+    if (!menuName) return;
+
+    if (favorites.has(menuName)) {
+        favorites.delete(menuName);
+    } else {
+        favorites.add(menuName);
+    }
+
+    saveFavorites();
+    renderFavorites();
+    updateSlotFavoriteButtons();
+    renderHistory(false);
+}
+
+function isFavorite(menuName) {
+    return favorites.has(menuName);
+}
+
+function handleSlotFavoriteClick(event) {
+    const slotIndex = Number(event.currentTarget.dataset.slot);
+    const targetMenu = lastSelectedMenus[slotIndex];
+    if (!targetMenu) return;
+
+    toggleFavorite(targetMenu);
+}
+
+function handleHistoryFavoriteClick(event) {
+    const button = event.target.closest('.history-favorite-button');
+    if (!button) return;
+
+    const menuName = button.dataset.menu;
+    toggleFavorite(menuName);
+}
 
 // 메뉴 데이터 로드
 async function loadMenuData() {
@@ -77,6 +158,8 @@ async function spin() {
     await Promise.all(spinPromises);
 
     // 결과 처리
+    lastSelectedMenus = [...selectedMenus];
+    updateSlotFavoriteButtons();
     addToHistory(selectedMenus);
 
     isSpinning = false;
@@ -100,7 +183,7 @@ function spinReel(reel, finalMenu, delayIndex) {
 
             // 랜덤 메뉴 표시 (점점 느려짐)
             const randomMenu = menuData[Math.floor(Math.random() * menuData.length)];
-            reel.innerHTML = `<div class="slot-item">${randomMenu}</div>`;
+            reel.innerHTML = `<div class="slot-item"><span class="slot-item-text">${randomMenu}</span></div>`;
 
             // 속도 점점 감소
             const progress = iteration / totalIterations;
@@ -124,11 +207,11 @@ function slowFinish(reel, finalMenu, resolve) {
 
         if (count < slowSpins) {
             const randomMenu = menuData[Math.floor(Math.random() * menuData.length)];
-            reel.innerHTML = `<div class="slot-item">${randomMenu}</div>`;
+            reel.innerHTML = `<div class="slot-item"><span class="slot-item-text">${randomMenu}</span></div>`;
         } else {
             clearInterval(slowInterval);
             // 최종 결과 표시
-            reel.innerHTML = `<div class="slot-item final">${finalMenu}</div>`;
+            reel.innerHTML = `<div class="slot-item final"><span class="slot-item-text">${finalMenu}</span></div>`;
             resolve();
         }
     }, 150 + (count * 50)); // 점점 느려짐
@@ -156,26 +239,86 @@ function addToHistory(menus) {
     // 로컬 스토리지에 저장
     saveHistory();
 
-    // UI 업데이트
-    renderHistory();
+    // UI 업데이트 (애니메이션 효과 적용, 새로 추가된 메뉴 전달)
+    renderHistory(true, menus);
 }
 
 // 히스토리 렌더링
-function renderHistory() {
+function renderHistory(animateNew = false, newMenus = []) {
     if (history.length === 0) {
         historyList.innerHTML = '<p class="history-empty">아직 추천받은 메뉴가 없습니다.</p>';
         return;
     }
 
-    historyList.innerHTML = history.map(item => `
-        <div class="history-item">
+    // 새로 추가된 메뉴 세트 (중복 비교용)
+    const newMenuSet = new Set(newMenus);
+
+    historyList.innerHTML = history.map((item, index) => {
+        // 첫 번째 항목(새로 추가된 항목)은 중복 체크 건너뜀
+        const isNewEntry = index === 0 && animateNew;
+
+        return `
+        <div class="history-item ${isNewEntry ? 'new-entry' : ''}">
             <div class="history-number">${item.id}</div>
             <div class="history-menus">
-                ${item.menus.map(menu => `<span class="history-menu-tag">${menu}</span>`).join('')}
+                ${item.menus.map(menu => {
+            // 새로 추가된 항목이 아니고, 새 메뉴와 중복되는 경우 표시
+            const isDuplicate = !isNewEntry && newMenuSet.has(menu);
+            const isSaved = isFavorite(menu);
+            return `
+                <span class="history-menu-tag ${isDuplicate ? 'duplicate' : ''}">
+                    <span class="history-menu-name">${menu}</span>
+                    <button class="history-favorite-button ${isSaved ? 'active' : ''}" data-menu="${menu}"
+                        type="button" aria-label="${menu} 즐겨찾기">
+                        ${isSaved ? '★' : '☆'}
+                    </button>
+                </span>
+            `;
+        }).join('')}
             </div>
             <div class="history-time">${item.time}</div>
         </div>
-    `).join('');
+    `;
+    }).join('');
+}
+
+function renderFavorites() {
+    const favoriteItems = [...favorites];
+    favoritesCount.textContent = favoriteItems.length.toString();
+
+    if (favoriteItems.length === 0) {
+        favoritesList.innerHTML = '<p class="favorites-empty">즐겨찾기한 메뉴가 없습니다.</p>';
+        return;
+    }
+
+    favoritesList.innerHTML = favoriteItems.map((menu) => {
+        return `
+            <div class="favorite-item">
+                <span class="favorite-name">${menu}</span>
+                <button class="favorite-remove" type="button" data-menu="${menu}" aria-label="${menu} 즐겨찾기 해제">
+                    ★
+                </button>
+            </div>
+        `;
+    }).join('');
+
+    favoritesList.querySelectorAll('.favorite-remove').forEach((button) => {
+        button.addEventListener('click', () => {
+            toggleFavorite(button.dataset.menu);
+        });
+    });
+}
+
+function updateSlotFavoriteButtons() {
+    slotFavoriteButtons.forEach((button) => {
+        const slotIndex = Number(button.dataset.slot);
+        const menuName = lastSelectedMenus[slotIndex];
+        const isSaved = menuName ? isFavorite(menuName) : false;
+
+        button.classList.toggle('active', isSaved);
+        button.querySelector('.favorite-icon').textContent = isSaved ? '★' : '☆';
+        button.setAttribute('aria-label', menuName ? `${menuName} 즐겨찾기` : '추천 결과 즐겨찾기');
+    });
 }
 
 // 히스토리 로컬 스토리지 저장
@@ -192,6 +335,6 @@ function loadHistory() {
     if (saved) {
         history = JSON.parse(saved);
         historyCounter = parseInt(savedCounter) || 0;
-        renderHistory();
+        renderHistory(false);
     }
 }
