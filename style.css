@@ -251,12 +251,12 @@ body {
     justify-content: center;
     font-size: 1.3rem;
     font-weight: 700;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
     text-align: center;
     color: var(--text-primary);
-    white-space: nowrap;
+    word-break: keep-all;
+    line-height: 1.2;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .slot-item.final {
@@ -387,7 +387,12 @@ body {
     flex-direction: column;
     gap: 1rem;
     overflow-y: auto;
-    padding-right: 0.5rem;
+    padding: 0.5rem;
+    padding-bottom: 1rem;
+    /* 여백 추가하여 그림자 잘림 방지 */
+    margin: -0.5rem;
+    margin-bottom: 0;
+    /* 하단 여백 상쇄 제거 */
     flex: 1;
     /* 남은 높이 차지 */
 }
@@ -437,6 +442,57 @@ body {
     }
 }
 
+.history-item.new-entry {
+    animation: newEntryHighlight 1.5s ease-out;
+    position: relative;
+    overflow-x: clip;
+}
+
+.history-item.new-entry::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    animation: shine 1.5s ease-out;
+}
+
+@keyframes newEntryHighlight {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+        border-color: var(--accent);
+        box-shadow: 0 0 30px rgba(34, 211, 238, 0.4);
+        background: rgba(34, 211, 238, 0.15);
+    }
+
+    60% {
+        border-color: var(--accent);
+        box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
+        background: rgba(34, 211, 238, 0.08);
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        /* Return to original styles implicitly or naturally */
+    }
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
 .history-item:hover {
     background: rgba(99, 102, 241, 0.1);
     border-color: var(--border-glow);
@@ -469,6 +525,28 @@ body {
     border-radius: 20px;
     font-size: 0.9rem;
     color: var(--accent);
+    transition: all 0.3s ease;
+}
+
+/* 중복 메뉴 하이라이트 */
+.history-menu-tag.duplicate {
+    background: rgba(251, 146, 60, 0.25);
+    border-color: rgba(251, 146, 60, 0.6);
+    color: #fb923c;
+    animation: duplicatePulse 2s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(251, 146, 60, 0.3);
+}
+
+@keyframes duplicatePulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 10px rgba(251, 146, 60, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(251, 146, 60, 0.5), 0 0 30px rgba(251, 146, 60, 0.2);
+    }
 }
 
 .history-time {
@@ -535,4 +613,60 @@ body {
     .history-time {
         align-self: flex-end;
     }
+}
+
+/* ===== 확률 정보 섹션 ===== */
+.probability-info {
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.prob-title {
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.prob-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.prob-list li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.prob-icon {
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.prob-text {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.prob-text strong {
+    color: var(--text-primary);
+    display: inline;
+    margin-right: 0.5rem;
 }
